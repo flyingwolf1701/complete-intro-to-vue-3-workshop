@@ -6,5 +6,66 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
   </head>
-  <body></body>
+  <body>
+    <div id="app">
+      <h1>{{showTitle}}</h1>
+      
+      <p v-if="!starTrek.length"> No charactors exist</p>
+      <ul v-else>
+        <li v-for="charactor in starTrek">
+          {{charactor.role}}: {{charactor.name}}
+        </li>
+      </ul>
+    </div>
+
+    <script src="https://unpkg.com/vue@3/dist/vue.global.js"></script>
+    <script>
+      const { createApp } = Vue
+    
+      const app = createApp({
+        data() {
+          return {
+            showTitle: 'Star Trek: TNG',
+            listOfNumbers: [1,2,3,4,5],
+            starTrek: [
+              {
+                "name": "Jean-Luc Picard",
+                "role": "Captain"
+              },
+              {
+                "name": "William Riker",
+                "role": "Commander"
+              },
+              {
+                "name": "Data",
+                "role": "Lieutenant Commander"
+              },
+              {
+                "name": "Worf",
+                "role": "Lieutenant Commander"
+              },
+              {
+                "name": "Geordi La Forge",
+                "role": "Chief Engineer"
+              },
+              {
+                "name": "Deanna Troi",
+                "role": "Counselor"
+              },
+              {
+                "name": "Beverly Crusher",
+                "actor": "Gates McFadden",
+                "role": "Chief Medical Officer"
+              },
+              {
+                "name": "Wesley Crusher",
+                "role": "Acting Ensign"
+              }
+            ]
+          }
+        }
+      })
+      app.mount('#app')
+    </script>
+  </body>
 </html>

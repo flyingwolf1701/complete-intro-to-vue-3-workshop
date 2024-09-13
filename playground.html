@@ -9,10 +9,22 @@
   <body>
     <h1>hello world</h1>
     <div id="app">
+      <h2>Counter</h2>
+      <p>{{ count }}</p>
+      <button v-on:click="incrementCount">incrememnt count</button>
+      <div>
+        <label for="incrementAmount">increment by:</label>
+        <input 
+          type="number" 
+          v-model="incrementAmount"
+        >
+      </div>
+
+      <hr/>
       <p v-if="message.length % 2 === 0">Even: {{message}} </p>
       <p v-else>Odd: {{message.toUpperCase()}} </p>
       <ul>
-        <li v-for="number in listOfNumbers">{{number * Math.random()}}</li>
+        <li v-for="number in listOfNumbers">{{number}}</li>
       </ul>
     </div>
 
@@ -23,9 +35,17 @@
       const app = createApp({
         data() {
           return {
+            // These are interactive data properties:
+            count: 0,
+            incrementAmount: 8,
             message: 'it works!',
             listOfNumbers: [1,2,3,4,5]
           }
+        },
+        methods: {
+          incrementCount() {
+            this.count += this.incrementAmount
+          },
         }
       })
       app.mount('#app')
