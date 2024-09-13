@@ -9,7 +9,7 @@
   <body>
     <h1>hello world</h1>
     <div id="app">
-      <h2>Counter</h2>
+      <h2>{{ displayTitle}}</h2>
       <p>{{ count }}</p>
       <button v-on:click="incrementCount">incrememnt count</button>
       <div>
@@ -37,16 +37,37 @@
           return {
             // These are interactive data properties:
             count: 0,
+            counterTitle: 'Counter Standard',
             incrementAmount: 8,
             message: 'it works!',
             listOfNumbers: [1,2,3,4,5]
+          }
+        },
+        computed:{
+          displayTitle() {
+            if (this.count < 20) {
+              return "Small Number title"
+            } else {
+              return 'Large number title'
+            }
           }
         },
         methods: {
           incrementCount() {
             this.count += this.incrementAmount
           },
-        }
+        },
+        // watch: {
+          
+        //   count(newValue) {
+        //     // the normal paradigm:
+        //     if(newValue > 20) {
+        //       this.counterTitle += " Very long"
+        //     }
+        // // But using compute lets vue deturmine when its dependancies have changed. 
+        //     console.log(newValue)
+        //   }
+        // }
       })
       app.mount('#app')
     </script>
