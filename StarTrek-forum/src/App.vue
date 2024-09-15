@@ -86,19 +86,15 @@ export default {
   },
   computed: {
     numChar() {
-      return (this.totalChar = this.characterList.length)
+      return this.characterList.length
     },
     numHumans() {
-      const humansNum = this.characterList.filter(
+      return this.characterList.filter(
         (character) => character.species === 'Human'
       ).length
-
-      this.human = humansNum
-      console.log('num humans', this.human)
-      return humansNum
     },
     percentageHuman() {
-      return (this.human / this.totalChar) * 100
+      return (this.numHumans / this.numChar) * 100
     }
   },
   methods: {
