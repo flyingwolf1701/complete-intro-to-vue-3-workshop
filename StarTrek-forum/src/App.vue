@@ -1,85 +1,165 @@
-<script setup lang="ts">
-import { RouterLink, RouterView } from 'vue-router'
-import HelloWorld from './components/HelloWorld.vue'
+<script>
+export default {
+  data() {
+    return {
+      showTitle: 'Star Trek: TNG',
+      showFavorites: false,
+      totalChar: 0,
+      human: 0,
+      newCharacter: {
+        name: '',
+        role: '',
+        species: '',
+        faction: '',
+        alignment: '',
+        favorite: false
+      },
+
+      characterList: [
+        {
+          name: 'Jean-Luc Picard',
+          role: 'Captain',
+          species: 'Human',
+          faction: 'Federation',
+          alignment: 'Lawful Good',
+          favorite: false
+        },
+        {
+          name: 'William Riker',
+          role: 'Commander',
+          species: 'Human',
+          faction: 'Federation',
+          alignment: 'Neutral Good',
+          favorite: false
+        },
+        {
+          name: 'Data',
+          role: 'Android Officer',
+          species: 'Android',
+          faction: 'Federation',
+          alignment: 'Neutral Good',
+          favorite: false
+        },
+        {
+          name: 'Worf',
+          role: 'Security Officer',
+          species: 'Klingon',
+          faction: 'Federation',
+          alignment: 'Lawful Neutral',
+          favorite: false
+        },
+        {
+          name: 'Geordi La Forge',
+          role: 'Chief Engineer',
+          species: 'Human',
+          faction: 'Federation',
+          alignment: 'Neutral Good',
+          favorite: false
+        },
+        {
+          name: 'Deanna Troi',
+          role: 'Counselor',
+          species: 'Betazoid',
+          faction: 'Federation',
+          alignment: 'Neutral Good',
+          favorite: false
+        },
+        {
+          name: 'Beverly Crusher',
+          role: 'Chief Medical Officer',
+          species: 'Human',
+          faction: 'Federation',
+          alignment: 'Neutral Good',
+          favorite: false
+        },
+        {
+          name: 'Guinan',
+          role: 'Bartender',
+          species: 'El-Aurian',
+          faction: 'Federation',
+          alignment: 'Neutral Good',
+          favorite: false
+        }
+      ],
+      favoritesList: []
+    }
+  },
+  computed: {
+    numChar() {
+      return (this.totalChar = this.characterList.length)
+    },
+    numHumans() {
+      const humansNum = this.characterList.filter(
+        (character) => character.species === 'Human'
+      ).length
+
+      this.human = humansNum
+      console.log('num humans', this.human)
+      return humansNum
+    },
+    percentageHuman() {
+      return (this.human / this.totalChar) * 100
+    }
+  },
+  methods: {
+    addNewCharacter() {
+      this.characterList.push(this.newCharacter)
+      this.newCharacter = {
+        name: '',
+        role: '',
+        favorite: false
+      }
+    },
+    toggleShowFavorite() {
+      this.showFavorites = !this.showFavorites
+      console.log('show favorites:', this.showFavorites)
+    },
+    toggleCharFavorite(character) {
+      this.favoritesList.push(character.name)
+      console.log('favoriteslist', this.favoritesList)
+    }
+  }
+}
 </script>
 
 <template>
-  <header>
-    <img alt="Vue logo" class="logo" src="@/assets/logo.svg" width="125" height="125" />
+  <div id="app">
+    <div>
+      <button v-if="!showFavorites" v-on:click="toggleShowFavorite">show favorites</button>
+      <button v-else v-on:click="toggleShowFavorite">hide favorites</button>
 
-    <div class="wrapper">
-      <HelloWorld msg="You did it!" />
-
-      <nav>
-        <RouterLink to="/">Home</RouterLink>
-        <RouterLink to="/about">About</RouterLink>
-      </nav>
+      <ul v-if="showFavorites && favoritesList.length >= 1">
+        <li v-for="(character, index) in favoritesList" :key="`favChar=${index}`">
+          {{ character }}
+        </li>
+      </ul>
+      <p v-if="showFavorites && favoritesList.length < 1">No characters added to favorites</p>
     </div>
-  </header>
+    <hr />
 
-  <RouterView />
+    <p v-if="!characterList.length">No characters exist</p>
+    <ul v-else>
+      <li v-for="(character, index) in characterList" :key="`char-${index}`">
+        {{ character.role }}: {{ character.name }} -- {{ character.favorite }}
+        <button v-if="character.favorite" @click="toggleCharFavorite(character)">Favorited</button>
+        <button v-else @click="toggleCharFavorite(character)">Like</button>
+      </li>
+    </ul>
+    <div>
+      <h2>Percentage of Characters that are human: {{ percentageHuman }}%</h2>
+      <p>Total Characters: {{ numChar }}</p>
+      <p>Humans: {{ numHumans }}</p>
+    </div>
+    <hr />
+    <div>
+      <h2>Add new Character</h2>
+
+      <label for="name">name</label>
+      <input type="text" v-model="newCharacter.name" />
+      <label for="role">rank/role</label>
+      <input type="text" v-model="newCharacter.role" @keyup.enter="addNewCharacter" />
+
+      <pre>{{ newCharacter }}</pre>
+    </div>
+  </div>
 </template>
-
-<style scoped>
-header {
-  line-height: 1.5;
-  max-height: 100vh;
-}
-
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav {
-  width: 100%;
-  font-size: 12px;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-
-@media (min-width: 1024px) {
-  header {
-    display: flex;
-    place-items: center;
-    padding-right: calc(var(--section-gap) / 2);
-  }
-
-  .logo {
-    margin: 0 2rem 0 0;
-  }
-
-  header .wrapper {
-    display: flex;
-    place-items: flex-start;
-    flex-wrap: wrap;
-  }
-
-  nav {
-    text-align: left;
-    margin-left: -1rem;
-    font-size: 1rem;
-
-    padding: 1rem 0;
-    margin-top: 1rem;
-  }
-}
-</style>
