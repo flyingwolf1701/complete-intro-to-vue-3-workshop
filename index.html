@@ -8,39 +8,44 @@
   </head>
   <body>
     <div id="app">
-      
+          
       <div>
         <button v-if="!showFavorites" v-on:click="toggleShowFavorite">show favorites</button>
         <button v-else v-on:click="toggleShowFavorite">hide favorites</button>
 
         <ul v-if="showFavorites && favoritesList.length >= 1">
-          <li v-for="charactor in favoritesList"> {{charactor}}</li>
+          <li v-for="character in favoritesList"> {{character}}</li>
         </ul>
-        <p v-if="showFavorites && favoritesList.length < 1" >No charactors added to favorites</p>
+        <p v-if="showFavorites && favoritesList.length < 1" >No characters added to favorites</p>
         
       </div>
       <hr/>
       
-      <p v-if="!charactorList.length"> No charactors exist</p>
+      <p v-if="!characterList.length"> No characters exist</p>
       <ul v-else>
-        <li v-for="(charactor, index) in charactorList">
-            {{charactor.role}}: {{charactor.name}} -- {{charactor.favorite}}
-            <button v-if="charactor.favorite" @click="toggleCharFavorite(charactor)">Favorited</button>
-                <button v-else="charactor.favorite" @click="toggleCharFavorite(charactor)">Like</button>
+        <li v-for="(character, index) in characterList">
+            {{character.role}}: {{character.name}} -- {{character.favorite}}
+            <button v-if="character.favorite" @click="toggleCharFavorite(character)">Favorited</button>
+                <button v-else="character.favorite" @click="toggleCharFavorite(character)">Like</button>
          
         </li>
       </ul>
+      <div>
+        <h2>Percentage of Characters that are human: {{percentageHuman}}%</h2>
+        <p>Total Characters: {{numChar}}</p>
+        <p>Humans: {{numHumans}}</p>
+      </div>
       <hr/>
       <div>
-        <h2>Add new Charactor</h2>
+        <h2>Add new Character</h2>
         
           <label for="name">name</label>
-          <input type="text" v-model="newCharactor.name" >
+          <input type="text" v-model="newCharacter.name" >
           <label for="role">rank/role</label>
-          <input type="text" v-model="newCharactor.role" @keyup.enter="addNewCharactor">
+          <input type="text" v-model="newCharacter.role" @keyup.enter="addNewCharacter">
           
          
-        <pre>{{newCharactor}}</pre>
+        <pre>{{newCharacter}}</pre>
       </div>
     </div>
 
@@ -54,60 +59,110 @@
           return {
             showTitle: 'Star Trek: TNG',
             showFavorites: false,
-            newCharactor: {
+            totalChar: 0,
+            human: 0,
+            newCharacter: {
               name: '',
               role: '',
+              species: "",
+              faction: "",
+              alignment: "",
               favorite: false
+              
             },
-            charactorList: [
+             
+            characterList: [
               {
                 "name": "Jean-Luc Picard",
                 "role": "Captain",
+                "species": "Human",
+                "faction": "Federation",
+                "alignment": "Lawful Good",
                 favorite: false
               },
               {
                 "name": "William Riker",
                 "role": "Commander",
+                "species": "Human",
+                "faction": "Federation",
+                "alignment": "Neutral Good",
                 favorite: false
               },
               {
                 "name": "Data",
-                "role": "Lieutenant Commander",
+                "role": "Android Officer",
+                "species": "Android",
+                "faction": "Federation",
+                "alignment": "Neutral Good",
                 favorite: false
               },
               {
                 "name": "Worf",
-                "role": "Lieutenant Commander",
+                "role": "Security Officer",
+                "species": "Klingon",
+                "faction": "Federation",
+                "alignment": "Lawful Neutral",
                 favorite: false
               },
               {
                 "name": "Geordi La Forge",
                 "role": "Chief Engineer",
+                "species": "Human",
+                "faction": "Federation",
+                "alignment": "Neutral Good",
                 favorite: false
               },
               {
                 "name": "Deanna Troi",
                 "role": "Counselor",
+                "species": "Betazoid",
+                "faction": "Federation",
+                "alignment": "Neutral Good",
                 favorite: false
               },
               {
                 "name": "Beverly Crusher",
                 "role": "Chief Medical Officer",
+                "species": "Human",
+                "faction": "Federation",
+                "alignment": "Neutral Good",
                 favorite: false
               },
               {
-                "name": "Wesley Crusher",
-                "role": "Acting Ensign",
+                "name": "Guinan",
+                "role": "Bartender",
+                "species": "El-Aurian",
+                "faction": "Federation",
+                "alignment": "Neutral Good",
                 favorite: false
-              }
+              },
             ],
             favoritesList: []
           }
         },
+        computed: {
+          numChar(){
+            return this.totalChar = this.characterList.length
+          },
+          numHumans(){
+            const humansNum = this.characterList.filter
+              (character => character.species === 'Human').length
+              
+              this.human = humansNum
+              console.log("num humans", this.human)
+              return humansNum
+            
+          },
+          percentageHuman(){
+            
+            return (this.human / this.totalChar) * 100
+          }
+
+        },
         methods: {
-          addNewCharactor(){
-            this.charactorList.push(this.newCharactor)
-            this.newCharactor = {
+          addNewCharacter(){
+            this.characterList.push(this.newCharacter)
+            this.newCharacter = {
               name: '',
               role: '',
               favorite: false
@@ -117,10 +172,10 @@
             this.showFavorites = !this.showFavorites;
             console.log('show favorites:', this.showFavorites)
           },
-          toggleCharFavorite(charactor) {
+          toggleCharFavorite(character) {
             
             
-            this.favoritesList.push(charactor.name)
+            this.favoritesList.push(character.name)
             console.log('favoriteslist', this.favoritesList)
           }
         },
